@@ -219,7 +219,7 @@
         };
 
         // --- IA GOOGLE & HELPERS ---
-        const callIA = async (payload, key, retryCount = 0, specifiedModel = 'gemini-1.5-flash') => {
+        const callIA = async (payload, key, retryCount = 0, specifiedModel = 'gemini-2.5-flash') => {
             const cleanKey = key.trim();
             if (!cleanKey) throw new Error("Clé API Gemini manquante");
 
@@ -1378,9 +1378,9 @@
                     const maxPages = Math.min(pdf.numPages, 50); 
                     
                     // --- SÉLECTION DU MODÈLE ---
-                    // On force l'utilisation du modèle stable gemini-1.5-flash 
-                    // pour éviter les erreurs 404 avec les nouveaux modèles expérimentaux
-                    let bestModel = 'gemini-1.5-flash';
+                    // On force l'utilisation du modèle stable gemini-2.5-flash 
+                    // pour éviter les erreurs 404 avec les anciens modèles dépréciés
+                    let bestModel = 'gemini-2.5-flash';
                     setSyncLog(prev => prev + `\n🤖 Modèle IA utilisé : ${bestModel}`);
 
                     for (let i = 1; i <= maxPages; i++) {
@@ -1764,6 +1764,7 @@
             return (
                 <ErrorBoundary>
                     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans relative">
+                        {}
                         <div className="fixed top-20 right-4 z-[200] space-y-2 pointer-events-none">
                             {toasts.map(t => (
                                 <div key={t.id} className={`p-4 rounded-xl shadow-lg text-sm font-bold animate-fade text-white flex items-center gap-2 pointer-events-auto ${t.type === 'error' ? 'bg-red-500' : t.type === 'success' ? 'bg-green-500' : 'bg-slate-800'}`}>
@@ -1854,6 +1855,7 @@
                             </div>
                         )}
 
+                        {}
                         {showQuoteProductModal && (
                             <div className="fixed inset-0 z-[130] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade">
                                 <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full h-[80vh] flex flex-col relative overflow-hidden">
@@ -2032,6 +2034,7 @@
                             </div>
                         )}
 
+                        {}
                         {viewingReport && (
                             <div className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade">
                                 <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full relative flex flex-col max-h-[85vh] overflow-hidden">
@@ -2140,6 +2143,7 @@
                             </div>
                         )}
 
+                        {}
                         <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200 h-16 flex items-center justify-between px-4 md:px-8 sticky top-0 z-40">
                             <div className="flex items-center gap-3"><div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveTab('search')}><div className="bg-blue-600 text-white p-1.5 rounded-lg"><Icon name="Database" size={20} /></div><span className="font-bold text-lg tracking-tight hidden md:inline">Catalogue <span className="text-blue-600">DBX V2</span></span></div><button onClick={() => loadCloudDatabase()} className="p-2 bg-slate-100 hover:bg-blue-100 text-slate-500 hover:text-blue-600 rounded-full transition-colors" title="Forcer la mise à jour"><Icon name="RefreshCw" size={16} className={syncStatus === 'working' ? 'animate-spin' : ''}/></button></div>
                             <div className="flex items-center gap-3">
@@ -2149,6 +2153,7 @@
                             </div>
                         </nav>
 
+                        {}
                         <main className="flex-1 max-w-6xl w-full mx-auto p-4 md:p-8">
                             
                             {/* SEARCH & QUOTE TABS */}
@@ -2271,6 +2276,7 @@
                                 </div>
                             )}
 
+                            {}
                             {activeTab === 'quote' && (
                                 <div className="max-w-4xl mx-auto space-y-8">
                                     <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
@@ -2366,7 +2372,7 @@
                                 </div>
                             )}
 
-                            {/* ONSSA TAB */}
+                            {}
                             {activeTab === 'onssa' && currentUser.role === 'admin' && (
                                 <div className="max-w-4xl mx-auto space-y-8">
                                     <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
@@ -2447,7 +2453,7 @@
                                 </div>
                             )}
 
-                            {/* ADMIN TAB */}
+                            {}
                             {activeTab === 'admin' && currentUser.role === 'admin' && (
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                     <div className="lg:col-span-1 space-y-6">
@@ -2466,7 +2472,7 @@
                                     <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[600px]"><div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50"><h3 className="font-bold text-lg text-slate-800">Indexation</h3><div className="flex gap-2"><button onClick={handleDeleteAllTarifs} className="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1 transition-colors"><Icon name="Trash2" size={14}/> Tout Supprimer</button><button onClick={() => { setAdminUploadMode('new'); setShowAdminUploadModal(true); }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-indigo-200 transition-all active:scale-95"><Icon name="Plus"/> Gestion Tarifs</button><button onClick={() => handleSyncFiches()} disabled={syncStatus === 'working'} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-200 transition-all active:scale-95 disabled:opacity-50"><Icon name={syncStatus === 'working' ? "Loader2" : "RefreshCw"} className={syncStatus === 'working' ? "animate-spin" : ""}/> Scan/Sync Fiches</button></div></div><div className="flex-1 overflow-auto p-0"><table className="w-full text-sm text-left"><thead className="bg-white sticky top-0 shadow-sm text-slate-500 font-bold text-[10px] uppercase"><tr><th className="p-4">Fichier</th><th className="p-4">Type</th><th className="p-4 text-center">Info</th><th className="p-4 text-right">Actions</th></tr></thead><tbody className="divide-y divide-slate-50">{(tarifs || []).map(t => t && (<tr key={t.id} className="hover:bg-blue-50/30 group"><td className="p-4 font-bold text-slate-700">{t.name}</td><td className="p-4"><span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">TARIF</span></td><td className="p-4 text-center"><div className="text-blue-600 font-bold">{(t.products || []).length} produits</div>{t.t4_percentage > 0 && <div className="text-xs text-orange-500 font-bold">T4: -{t.t4_percentage}%</div>}</td><td className="p-4 text-right"><div className="flex justify-end gap-2">{t.report && <button onClick={() => setViewingReport(t.report)} className="p-2 text-orange-500 hover:text-orange-700 bg-orange-50 rounded-lg" title="Voir Rapport Fluctuation"><Icon name="TrendingUp" size={16}/></button>}<button onClick={() => handleDeleteEntry('tarif', t.id, t.name)} className="text-slate-300 hover:text-red-500 transition-colors p-2" title="Supprimer"><Icon name="Trash2" size={16}/></button></div></td></tr>))}{(fiches || []).map(f => f && (<tr key={f.id} className="hover:bg-indigo-50/30 group"><td className="p-4 font-bold text-slate-700">{f.name}</td><td className="p-4"><span className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs font-bold">FICHE</span></td><td className="p-4 text-center text-slate-400">PDF</td><td className="p-4 text-right"><button onClick={() => handleDeleteEntry('fiche', f.id, f.name)} className="text-slate-300 hover:text-red-500 transition-colors p-2" title="Supprimer"><Icon name="Trash2" size={16}/></button></td></tr>))}</tbody></table></div></div></div>
                             )}
 
-                            {/* SECURITY TAB */}
+                            {}
                             {activeTab === 'security' && currentUser.role === 'admin' && (
                                 <div className="max-w-4xl mx-auto space-y-8">
                                     <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
@@ -2535,7 +2541,7 @@
                                 </div>
                             )}
 
-                            {/* USERS TAB */}
+                            {}
                             {activeTab === 'users' && currentUser.role === 'admin' && (
                                 <div className="max-w-xl mx-auto space-y-8">
                                     <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
