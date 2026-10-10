@@ -76,12 +76,12 @@
         }
 
         // --- SECURITE (OBFUSCATION) ---
-        
-	const _d = (s) => { 
-   		if(!s) return "";
-    		if(s.startsWith("AIza") || s.startsWith("AQ")) return s; 
-    		try { return atob(s); } catch(e) { return s; } 
-	};
+        const _d = (s) => { 
+            if(!s) return "";
+            // ACCEPTATION DES CLES AIza... ET AQ...
+            if(s.startsWith("AIza") || s.startsWith("AQ")) return s; 
+            try { return atob(s); } catch(e) { return s; } 
+        };
 
         // --- CONFIGURATION PERMANENTE (ADMIN) ---
         const HARDCODED_APP_KEY = "MGp4ZTNoNWhqOXZtMmxr"; 
@@ -1083,7 +1083,6 @@
                 showToast("Devis supprimé !", 'success');
             };
 
-
             const generateQuotePDF = () => {
                 if (!quote.client) return showToast("Veuillez saisir le nom du client", 'warning');
                 if (quote.items.length === 0) return showToast("Ajoutez des articles au devis", 'warning');
@@ -1378,24 +1377,11 @@
                     const filenameDate = extractDateFromFilename(filename);
                     const maxPages = Math.min(pdf.numPages, 50); 
                     
-                    // --- AUTO-DÉCOUVERTE DU MEILLEUR MODÈLE ---
+                    // --- SÉLECTION DU MODÈLE ---
+                    // On force l'utilisation du modèle stable gemini-1.5-flash 
+                    // pour éviter les erreurs 404 avec les nouveaux modèles expérimentaux
                     let bestModel = 'gemini-1.5-flash';
-                    try {
-                        setSyncLog(prev => prev + "\n🔍 Auto-découverte du modèle IA autorisé pour votre clé...");
-                        const checkRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${dbxConfig.geminiKey.trim()}`);
-                        if (checkRes.ok) {
-                            const data = await checkRes.json();
-                            const models = (data.models || []).map(m => m.name.replace('models/', ''));
-                            // Priorité aux modèles connus et performants existant sur le compte
-			    const prefs = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.5-flash-latest'];
-                            bestModel = prefs.find(p => models.includes(p)) || models.find(m => m.includes('flash')) || 'gemini-1.5-flash';
-                            setSyncLog(prev => prev + `\n🤖 Modèle sélectionné par l'API : ${bestModel}`);
-                        } else {
-                            setSyncLog(prev => prev + `\n⚠️ Impossible de lister les modèles, utilisation du défaut (${bestModel})`);
-                        }
-                    } catch (err) {
-                        console.warn("Échec auto-découverte", err);
-                    }
+                    setSyncLog(prev => prev + `\n🤖 Modèle IA utilisé : ${bestModel}`);
 
                     for (let i = 1; i <= maxPages; i++) {
                         setSyncLog(prev => prev + `\n⏳ Analyse page ${i}/${pdf.numPages}...`);
