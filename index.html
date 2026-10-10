@@ -76,11 +76,12 @@
         }
 
         // --- SECURITE (OBFUSCATION) ---
-        const _d = (s) => { 
-            if(!s) return "";
-            if(s.startsWith("AIza")) return s; 
-            try { return atob(s); } catch(e) { return s; } 
-        };
+        
+	const _d = (s) => { 
+   		if(!s) return "";
+    		if(s.startsWith("AIza") || s.startsWith("AQ")) return s; 
+    		try { return atob(s); } catch(e) { return s; } 
+	};
 
         // --- CONFIGURATION PERMANENTE (ADMIN) ---
         const HARDCODED_APP_KEY = "MGp4ZTNoNWhqOXZtMmxr"; 
@@ -1386,7 +1387,8 @@
                             const data = await checkRes.json();
                             const models = (data.models || []).map(m => m.name.replace('models/', ''));
                             // Priorité aux modèles connus et performants existant sur le compte
-                           const prefs = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.5-flash-latest'];bestModel = prefs.find(p => models.includes(p)) || models.find(m => m.includes('flash')) || 'gemini-1.5-flash';
+			    const prefs = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.5-flash-latest'];
+                            bestModel = prefs.find(p => models.includes(p)) || models.find(m => m.includes('flash')) || 'gemini-1.5-flash';
                             setSyncLog(prev => prev + `\n🤖 Modèle sélectionné par l'API : ${bestModel}`);
                         } else {
                             setSyncLog(prev => prev + `\n⚠️ Impossible de lister les modèles, utilisation du défaut (${bestModel})`);
